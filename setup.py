@@ -11,6 +11,7 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "fastapi>=0.104.1",
+        "gunicorn>=21.2.0",
         "uvicorn[standard]>=0.24.0",
         "scikit-learn>=1.3.2",
         "numpy>=1.24.3",

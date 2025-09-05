@@ -47,7 +47,11 @@ pip install -r requirements.txt
 
 3. Run the application:
 ```bash
+# Development (with auto-reload)
 uvicorn src.regression_api.main:app --reload
+
+# Production (with gunicorn)
+gunicorn src.regression_api.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
 The API will be available at `http://localhost:8000`
