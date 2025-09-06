@@ -1,12 +1,14 @@
 """
 Pytest configuration and shared fixtures.
 """
+
 import os
 import tempfile
-import pytest
+
 import numpy as np
-from sklearn.linear_model import LinearRegression
-from src.regression_api.model import train_model, save_model
+import pytest
+
+from src.regression_api.model import save_model, train_model
 
 
 @pytest.fixture
@@ -26,7 +28,7 @@ def sample_data():
 @pytest.fixture
 def temp_model_file(sample_model):
     """Create a temporary model file for testing."""
-    with tempfile.NamedTemporaryFile(suffix='.pkl', delete=False) as tmp_file:
+    with tempfile.NamedTemporaryFile(suffix=".pkl", delete=False) as tmp_file:
         save_model(sample_model, tmp_file.name)
         yield tmp_file.name
     # Cleanup
