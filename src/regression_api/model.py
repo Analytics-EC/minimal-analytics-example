@@ -19,16 +19,18 @@ def train_model() -> LinearRegression:
         LinearRegression: Trained model
     """
     # Sample data
-    X = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)  # Independent variable
-    y = np.array([20, 35, 41, 50, 78])  # Dependent variable
+    x_train = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)  # Independent variable
+    y_train = np.array([20, 35, 41, 50, 78])  # Dependent variable
+    x_test = np.array([6, 7, 8, 9, 10]).reshape(-1, 1)  # Independent variable
+    y_test = np.array([80, 95, 101, 110, 128])  # Dependent variable
 
     # Create and fit the linear regression model
     model = LinearRegression()
-    model.fit(X, y)
+    model.fit(x_train, y_train)
 
     # Calculate predictions for evaluation
-    y_pred = model.predict(X)
-    mse = mean_squared_error(y, y_pred)
+    y_pred = model.predict(x_test)
+    mse = mean_squared_error(y_test, y_pred)
     print(f"Mean Squared Error (MSE): {mse}")
 
     return model
