@@ -4,7 +4,6 @@ Model training and loading utilities for linear regression.
 
 import os
 import pickle
-from typing import Optional
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -19,10 +18,10 @@ def train_model() -> LinearRegression:
         LinearRegression: Trained model
     """
     # Sample data
-    x_train = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)  # Independent variable
-    y_train = np.array([20, 35, 41, 50, 78])  # Dependent variable
-    x_test = np.array([6, 7, 8, 9, 10]).reshape(-1, 1)  # Independent variable
-    y_test = np.array([80, 95, 101, 110, 128])  # Dependent variable
+    x_train = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
+    y_train = np.array([20, 35, 41, 50, 78])
+    x_test = np.array([6, 7, 8, 9, 10]).reshape(-1, 1)
+    y_test = np.array([80, 95, 101, 110, 128])
 
     # Create and fit the linear regression model
     model = LinearRegression()
@@ -31,14 +30,15 @@ def train_model() -> LinearRegression:
     # Calculate predictions for evaluation
     y_pred = model.predict(x_test)
     mse = mean_squared_error(y_test, y_pred)
+
     print(f"Mean Squared Error (MSE): {mse}")
 
     return model
 
 
 def save_model(
-    model: LinearRegression, filepath: str = "modelo_regresion_lineal_up.pkl"
-) -> None:
+        model: LinearRegression,
+        filepath: str = "linear_regression.pkl") -> None:
     """
     Save the trained model to a pickle file.
 
@@ -48,12 +48,13 @@ def save_model(
     """
     with open(filepath, "wb") as f:
         pickle.dump(model, f)
+
     print(f"Model saved to {filepath}")
 
 
 def load_model(
-    filepath: str = "modelo_regresion_lineal_up.pkl",
-) -> Optional[LinearRegression]:
+    filepath: str = "linear_regression.pkl",
+) -> LinearRegression | None:
     """
     Load a trained model from a pickle file.
 
@@ -65,16 +66,18 @@ def load_model(
     """
     if not os.path.exists(filepath):
         print(f"Error: Model file not found at {filepath}")
+
         return None
 
     with open(filepath, "rb") as f:
         model = pickle.load(f)
 
     print(f"Model loaded from {filepath}")
+
     return model
 
 
-def predict(model: LinearRegression, features: list) -> float:
+def predict(model: LinearRegression, features: list[float]) -> float:
     """
     Make a prediction using the trained model.
 
@@ -87,4 +90,5 @@ def predict(model: LinearRegression, features: list) -> float:
     """
     features_array = np.array(features).reshape(1, -1)
     prediction = model.predict(features_array)
+
     return float(prediction[0])

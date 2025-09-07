@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 
-def run_tests(test_type="all", verbose=False):
+def run_tests(test_type: str = "all", verbose: bool = False) -> bool:
     """
     Run tests based on the specified type.
 
@@ -35,7 +35,7 @@ def run_tests(test_type="all", verbose=False):
     return result.returncode == 0
 
 
-def main():
+def main() -> None:
     """Main function for command line usage."""
     parser = argparse.ArgumentParser(description="Run test suites")
     parser.add_argument(

@@ -3,34 +3,40 @@ FastAPI application for linear regression predictions.
 """
 
 import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, List
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from .model import load_model, predict, save_model, train_model
+from ..model.linear_regression import (
+    load_model,
+    predict,
+    save_model,
+    train_model,
+)
 
 # Global model storage
 model = {}
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator:
+async def lifespan(application: FastAPI) -> AsyncIterator:
     """Manage the application lifespan events."""
     # Startup: Load the model when the application starts
-    model_path = "modelo_regresion_lineal_up.pkl"
+    model_path = "linear_regression.pkl"
     model["pickle"] = load_model(model_path)
 
     # If model doesn't exist, train and save a new one
     if not model.get("pickle"):
         print("Training new model...")
         model["pickle"] = train_model()
-        save_model(model, model_path)
+        save_model(model.get("pickle"), model_path)
         print("Model trained and saved successfully")
 
     print(f"Model loaded successfully: {model.get('pickle')}")
+    print(f"Application: {application}")
 
     yield
 
@@ -49,14 +55,17 @@ app = FastAPI(
 
 # Pydantic models for request/response
 class PredictionRequest(BaseModel):
-    features: List[float]
+    """Request model for prediction."""
+    features: list[float]
 
 
 class PredictionResponse(BaseModel):
+    """Response model for prediction."""
     prediction: float
 
 
 class HealthResponse(BaseModel):
+    """Response model for health check."""
     status: str
     model_loaded: bool
 
@@ -70,7 +79,9 @@ async def home() -> dict[str, str]:
 @app.get("/health", response_model=HealthResponse)
 async def health_check() -> HealthResponse:
     """Health check endpoint."""
-    return HealthResponse(status="healthy", model_loaded=model.get("pickle") is not None)
+    return HealthResponse(
+        status="healthy", model_loaded=model.get("pickle") is not None
+    )
 
 
 @app.post("/predict", response_model=PredictionResponse)
@@ -89,6 +100,7 @@ async def predict_endpoint(request: PredictionRequest) -> PredictionResponse:
 
     try:
         prediction = predict(model.get("pickle"), request.features)
+
         return PredictionResponse(prediction=prediction)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
