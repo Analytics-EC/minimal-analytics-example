@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from statsmodels.tsa.statespace import sarimax as sm  # type: ignore
 
 

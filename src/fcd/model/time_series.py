@@ -15,20 +15,21 @@ from .config import (
     BASE_ORDER,
     BASE_SEASONAL_ORDER,
     DEMAND_LEVELS,
-    NOBS,
     MODELS,
+    NOBS,
     OOT_SAMPLE_SIZE,
 )
 from .simulate_arima import simulate_sarima
 
 
 def train_model(
-        nobs: int = NOBS,
-        base_order: tuple[int, int, int] = BASE_ORDER,
-        base_seasonal_order: tuple[int, int, int, int] = BASE_SEASONAL_ORDER,
-        demand_levels: dict[str, dict[str, float]] = DEMAND_LEVELS,
-        models: list[_TS] = MODELS,
-        out_of_sample_size: int = OOT_SAMPLE_SIZE) -> dict[str, _TS]:
+    nobs: int = NOBS,
+    base_order: tuple[int, int, int] = BASE_ORDER,
+    base_seasonal_order: tuple[int, int, int, int] = BASE_SEASONAL_ORDER,
+    demand_levels: dict[str, dict[str, float]] = DEMAND_LEVELS,
+    models: list[_TS] = MODELS,
+    out_of_sample_size: int = OOT_SAMPLE_SIZE,
+) -> dict[str, _TS]:
     """
     Train the model.
 
@@ -46,7 +47,7 @@ def train_model(
     )
 
     train_df = series_df.iloc[:-out_of_sample_size, :]
-    test_df = series_df.iloc[-out_of_sample_size:, ]
+    test_df = series_df.iloc[-out_of_sample_size:,]
 
     statsforecast = StatsForecast(
         models=models,
@@ -63,8 +64,7 @@ def train_model(
 
     return {
         unique_id: model
-        for models, champ, unique_id
-        in zip(
+        for models, champ, unique_id in zip(
             statsforecast.fitted_,
             champions.model,
             champions.unique_id,
@@ -233,10 +233,8 @@ def load_model(
 
 
 def predict(
-        models: dict[str, _TS],
-        h: int,
-        level: list[int],
-        unique_id: str) -> dict[str, list[float]]:
+    models: dict[str, _TS], h: int, level: list[int], unique_id: str
+) -> dict[str, list[float]]:
     """
     Make a prediction using the trained model.
 
