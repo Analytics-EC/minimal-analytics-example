@@ -130,7 +130,8 @@ dmypy.json
 
 # Model files
 *.pkl
-!modelo_regresion_lineal_up.pkl
+!linear_regression.pkl
+!time_series.pkl
 *.joblib
 *.h5
 *.pth
